@@ -1,6 +1,6 @@
 /*
  * Name: comb_sort.c
- * Objetive: Sort numbers using bubble sort algorithm
+ * Objetive: Sort numbers using comb sort algorithm
  * Input: an .inp file with values to be sorted
  * Output: .inp file with the random numbers already sorted
  * Notes: 
@@ -86,8 +86,9 @@ int main(int argc, char** argv)
  
 /*-------------------------------------------------------------------
  * Function:  combSort
- * Purpose:   implements combSort algorithm, uses swap to swapp the 
- *            adjacent elements if they are in the wrong order
+ * Purpose:   implements combSort algorithm, uses swap to swap the 
+ *            adjacent elements if they are in the wrong order and
+ *            uses gap to find gap between elements 
  */
 void combSort(int a[], int n) 
 { 

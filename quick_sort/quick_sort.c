@@ -1,6 +1,6 @@
 /*
- * Name: bubble_sort.c
- * Objetive: Sort numbers using bubble sort algorithm
+ * Name: quick_sort.c
+ * Objetive: Sort numbers using quick sort algorithm
  * Input: an .inp file with values to be sorted
  * Output: .inp file with the random numbers already sorted
  * Notes: 
@@ -17,8 +17,9 @@
 char path[MAX_STRING_LEN] = "";
 
 /* Serial functions */
-void bubbleSort(int arr[], int n);
-void swap(int *xp, int *yp);
+void quickSort(int arr[], int low, int high);
+int partition (int arr[], int low, int high);
+void swap(int* a, int* b);
 void arrToFile(char *name, int *array, int size);
 char* stringComposer(int n, int mode);
 void usage (char* prog_name);
@@ -64,9 +65,9 @@ int main(int argc, char** argv)
     
     // Measures the time 
     start = clock();
-    /* Bubble sort starts */
-    bubbleSort(arr, n); 
-    /* Bubble sort finishes */
+    /* Quick sort starts */
+    quickSort(arr, 0, n-1); 
+    /* Quick sort finishes */
     end = clock();
     
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
@@ -83,31 +84,65 @@ int main(int argc, char** argv)
 } 
  
 /*-------------------------------------------------------------------
- * Function:  bubbleSort
- * Purpose:   implements bubbleSort algorithm, uses swap to swapp the 
- *            adjacent elements if they are in the wrong order
+ * Function:  quickSort
+ * Purpose:   implements quickSort algorithm
+ *            arr[] --> Array to be sorted, 
+ *            low  --> Starting index, 
+ *            high  --> Ending index 
  */
-void bubbleSort(int arr[], int n) 
+void quickSort(int arr[], int low, int high) 
 { 
-   int i, j; 
-   for (i = 0; i < n-1; i++)       
+    if (low < high) 
+    { 
+        /* pi is partitioning index, arr[p] is now 
+           at right place */
+        int pi = partition(arr, low, high); 
   
-       // Last i elements are already in place    
-       for (j = 0; j < n-i-1; j++)  
-           if (arr[j] > arr[j+1]) 
-              swap(&arr[j], &arr[j+1]); 
+        // Separately sort elements before 
+        // partition and after partition 
+        quickSort(arr, low, pi - 1); 
+        quickSort(arr, pi + 1, high); 
+    } 
+}
+
+/*-------------------------------------------------------------------
+ * Function:  partition
+ * Purpose:   This function takes last element as pivot, places 
+ *            the pivot element at its correct position in sorted 
+ *            array, and places all smaller (smaller than pivot) 
+ *            to left of pivot and all greater elements to right 
+ *            of pivot
+ */
+int partition (int arr[], int low, int high) 
+{ 
+    int pivot = arr[high];    // pivot 
+    int i = (low - 1);  // Index of smaller element 
+  
+    for (int j = low; j <= high- 1; j++) 
+    { 
+        // If current element is smaller than or 
+        // equal to pivot 
+        if (arr[j] <= pivot) 
+        { 
+            i++;    // increment index of smaller element 
+            swap(&arr[i], &arr[j]); 
+        } 
+    } 
+    swap(&arr[i + 1], &arr[high]); 
+    return (i + 1); 
 } 
 
 /*-------------------------------------------------------------------
  * Function:  swap
- * Purpose:   swaps the adjacent elements 
+ * Purpose:   swap two elements 
  */
-void swap(int *xp, int *yp) 
+void swap(int* a, int* b) 
 { 
-    int temp = *xp; 
-    *xp = *yp; 
-    *yp = temp; 
+    int t = *a; 
+    *a = *b; 
+    *b = t; 
 } 
+
 
 /*-------------------------------------------------------------------
  * Function:  rngToFile
@@ -129,7 +164,6 @@ void arrToFile(char *name, int *array, int size)
 /*------------------------------------------------------------------
  * Function:  stringComposer
  * Purpose:   joins the strings that will compose the name of the file
- * In arg :   prog_name
  */
 char* stringComposer(int n, int mode) 
 {

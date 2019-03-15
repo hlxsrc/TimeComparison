@@ -32,6 +32,9 @@ int main(int argc, char** argv)
     
     FILE *fp;
     
+    clock_t start, end;
+    double cpu_time_used;
+    
     int file_status=1;
        
     // Receives arguments
@@ -59,7 +62,18 @@ int main(int argc, char** argv)
         fclose(fp);
     }
     
+    // Measures the time 
+    start = clock();
+    /* Bubble sort starts */
     bubbleSort(arr, n); 
+    /* Bubble sort finishes */
+    end = clock();
+    
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    
+    FILE *time_dat = fopen("time.dat", "a+");
+    fprintf(time_dat, "%d %.7f\n", n, cpu_time_used);
+    fclose(time_dat);
     
     // Gets the name of output file
     file_name = stringComposer(n,0);
